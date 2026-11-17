@@ -1,0 +1,403 @@
+html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CyberShield | Criptografia, Hash e Segurança com Python</title>
+<style>
+:root {
+--bg-dark: #070f2b;
+--bg-card: #0f1e4a;
+--bg-input: #091334;
+--primary: #2563eb;
+--primary-hover: #1d4ed8;
+--accent: #38bdf8;
+--accent-soft: rgba(56, 189, 248, 0.14);
+--border: rgba(56, 189, 248, 0.25);
+--text-main: #f8fafc;
+--text-muted: #94a3b8;
+--success: #10b981;
+--warning: #f59e0b;
+--danger: #ef4444;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+background: radial-gradient(circle at top right, #172554, var(--bg-dark) 60%);
+color: var(--text-main);
+min-height: 100vh;
+line-height: 1.6;
+}
+
+header {
+background: rgba(9, 19, 52, 0.85);
+backdrop-filter: blur(10px);
+border-bottom: 1px solid var(--border);
+padding: 1.5rem 2rem;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.header-container {
+max-width: 1120px;
+margin: 0 auto;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 1rem;
+}
+
+.logo {
+display: flex;
+align-items: center;
+gap: 0.75rem;
+}
+
+.logo-badge {
+background: linear-gradient(135deg, var(--primary), var(--accent));
+color: #fff;
+font-weight: 800;
+padding: 0.5rem 0.75rem;
+border-radius: 10px;
+font-size: 1.1rem;
+letter-spacing: 0.5px;
+}
+
+.logo h1 {
+font-size: 1.25rem;
+font-weight: 700;
+color: var(--text-main);
+}
+
+.logo span {
+display: block;
+font-size: 0.8rem;
+color: var(--accent);
+font-weight: 500;
+}
+
+nav {
+display: flex;
+gap: 0.5rem;
+flex-wrap: wrap;
+}
+
+.tab-btn {
+background: transparent;
+border: 1px solid var(--border);
+color: var(--text-muted);
+padding: 0.55rem 1rem;
+border-radius: 8px;
+cursor: pointer;
+font-size: 0.9rem;
+font-weight: 600;
+transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+border-color: var(--accent);
+color: var(--text-main);
+}
+
+.tab-btn.active {
+background: linear-gradient(135deg, var(--primary), #1e40af);
+border-color: var(--accent);
+color: #fff;
+box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+}
+
+main {
+max-width: 1120px;
+margin: 2rem auto;
+padding: 0 1.5rem;
+}
+
+.hero {
+background: linear-gradient(135deg, rgba(30, 58, 138, 0.55), rgba(15, 30, 74, 0.85));
+border: 1px solid var(--border);
+border-radius: 16px;
+padding: 2rem;
+margin-bottom: 2rem;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.hero h2 {
+font-size: 1.65rem;
+margin-bottom: 0.5rem;
+color: #fff;
+}
+
+.hero p {
+color: var(--text-muted);
+max-width: 780px;
+font-size: 0.98rem;
+}
+
+.section-panel {
+display: none;
+animation: fadeIn 0.25s ease;
+}
+
+.section-panel.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(6px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.grid-2 {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+gap: 1.5rem;
+}
+
+.card {
+background: var(--bg-card);
+border: 1px solid var(--border);
+border-radius: 14px;
+padding: 1.75rem;
+box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.card h3 {
+font-size: 1.2rem;
+color: var(--accent);
+margin-bottom: 0.4rem;
+}
+
+.card p.subtitle {
+font-size: 0.88rem;
+color: var(--text-muted);
+margin-bottom: 1.25rem;
+}
+
+label {
+display: block;
+font-size: 0.85rem;
+font-weight: 600;
+color: #cbd5e1;
+margin-bottom: 0.4rem;
+}
+
+textarea, input[type="text"], input[type="number"], input[type="password"] {
+width: 100%;
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 0.75rem 0.9rem;
+color: var(--text-main);
+font-size: 0.95rem;
+margin-bottom: 1rem;
+outline: none;
+transition: border-color 0.2s;
+}
+
+textarea:focus, input:focus {
+border-color: var(--accent);
+}
+
+.btn-group {
+display: flex;
+gap: 0.75rem;
+flex-wrap: wrap;
+margin-bottom: 1.25rem;
+}
+
+.btn {
+background: var(--primary);
+color: #fff;
+border: none;
+padding: 0.7rem 1.25rem;
+border-radius: 8px;
+font-weight: 600;
+font-size: 0.9rem;
+cursor: pointer;
+transition: background 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+background: var(--primary-hover);
+}
+
+.btn:active {
+transform: scale(0.98);
+}
+
+.btn-outline {
+background: transparent;
+border: 1px solid var(--accent);
+color: var(--accent);
+}
+
+.btn-outline:hover {
+background: var(--accent-soft);
+}
+
+.output-box {
+background: var(--bg-input);
+border: 1px dashed var(--accent);
+border-radius: 8px;
+padding: 1rem;
+font-family: 'Consolas', 'Courier New', monospace;
+font-size: 0.9rem;
+color: #e0f2fe;
+word-break: break-all;
+min-height: 54px;
+}
+
+.brute-list {
+max-height: 280px;
+overflow-y: auto;
+background: var(--bg-input);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 0.75rem;
+font-family: 'Consolas', 'Courier New', monospace;
+font-size: 0.85rem;
+}
+
+.brute-item {
+padding: 0.35rem 0.5rem;
+border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+.brute-item.highlight {
+background: rgba(16, 185, 129, 0.18);
+color: #6ee7b7;
+font-weight: bold;
+border-radius: 4px;
+}
+
+.strength-meter {
+height: 8px;
+background: var(--bg-input);
+border-radius: 99px;
+overflow: hidden;
+margin-bottom: 0.75rem;
+}
+
+.strength-bar {
+height: 100%;
+width: 0%;
+transition: width 0.3s ease, background 0.3s ease;
+}
+
+.badge-info {
+display: inline-block;
+background: var(--accent-soft);
+color: var(--accent);
+padding: 0.25rem 0.65rem;
+border-radius: 99px;
+font-size: 0.78rem;
+font-weight: 600;
+margin-bottom: 0.75rem;
+}
+
+pre {
+background: #050b20;
+border: 1px solid var(--border);
+border-radius: 10px;
+padding: 1.25rem;
+overflow-x: auto;
+color: #bae6fd;
+font-family: 'Consolas', 'Courier New', monospace;
+font-size: 0.86rem;
+line-height: 1.5;
+}
+
+.tips-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+gap: 1rem;
+margin-top: 1rem;
+}
+
+.tip-card {
+background: var(--bg-input);
+border-left: 4px solid var(--accent);
+padding: 1rem;
+border-radius: 8px;
+}
+
+.tip-card h4 {
+color: #fff;
+font-size: 0.95rem;
+margin-bottom: 0.35rem;
+}
+
+.tip-card p {
+color: var(--text-muted);
+font-size: 0.85rem;
+}
+
+footer {
+text-align: center;
+padding: 2rem 1rem;
+color: var(--text-muted);
+font-size: 0.85rem;
+border-top: 1px solid var(--border);
+margin-top: 3rem;
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="header-container">
+<div class="logo">
+<div class="logo-badge">PY-SEC</div>
+<div>
+<h1>Proteção de Informações</h1>
+<span>Criptografia, Hash e Segurança com Python</span>
+</div>
+</div>
+<nav>
+<button class="tab-btn active" onclick="openTab('cifra', this)">1. Criptografia</button>
+<button class="tab-btn" onclick="openTab('hash', this)">2. Hash SHA-256</button>
+<button class="tab-btn" onclick="openTab('forca-bruta', this)">3. Força Bruta</button>
+<button class="tab-btn" onclick="openTab('codigo-py', this)">4. Código Python</button>
+</nav>
+</div>
+</header>
+
+<main>
+<section class="hero">
+<h2>Laboratório Interativo de Segurança da Informação</h2>
+<p>
+Projeto desenvolvido para a unidade <strong>Proteção de informações: criptografia e hash com Python</strong>.
+Explore na prática a diferença entre ciframento reversível por substituição, funções hash irreversíveis (SHA-256),
+simulação de ataques de força bruta e boas práticas de proteção de dados.
+</p>
+</section>
+
+<!
+-ABA 1: CRIPTOGRAFIA POR SUBSTITUIÇÃO -->
+<section id="cifra" class="section-panel active">
+<div class="grid-2">
+<div class="card">
+<span class="badge-info">Algoritmo Reversível</span>
+<h3>Criptografia por Substituição (Cifra de César)</h3>
+<p class="subtitle">Desloca cada letra do alfabeto com base em uma chave numérica secreta.</p>
+<label for="texto-cifra">Mensagem original ou cifrada</label>
+<textarea id="texto-cifra" rows="3" placeholder="Digite sua mensagem secreta aqui...">Seguranca da Informacao com Python</textarea>
+
+<label for="chave-cifra">Chave de deslocamento (1 a 25)</label>
+<input type="number" id="chave-cifra" value="5" min="1" max="25" />
+
+<div class="btn-group">
+<button class="btn" onclick="processarCesar(true)">Criptografar Mensagem</button>
+<button class="btn btn-outline" onclick="processarCesar(false)">Descriptografar Mensagem</button>
+</div>
+
+<label>Resultado</label>
